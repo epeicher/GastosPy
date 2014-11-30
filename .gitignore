@@ -2,3 +2,4 @@
 *.xlsx
 *.pyc
 *.db
+*.sublime*

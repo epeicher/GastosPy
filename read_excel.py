@@ -19,45 +19,37 @@ def get_movement(r, xls_model):
     amt = parse_amount(sheet.cell_value(r,xls_model.col_amount))
     blc = parse_amount(sheet.cell_value(r,xls_model.col_balance))
 
-    return (date_movement, concept,amt, blc)
+    return (date_movement, concept,amt, blc, xls_model.acc_name)
 
 
 def get_San_movements():
     file_name = 'San.xlsx'
-    first_row = 11
-    col_date = 3
-    col_concept = 5
-    col_amount = 7
-    col_balance = 9
+    acc_name = file_name[:-5]
 
     wb = open_workbook(file_name)
     sheet = wb.sheet_by_index(0)
 
-    xls_model = excel_format.ExcelFormat(wb,sheet,col_date, col_concept,col_amount, col_balance)
+    xls_model = excel_format.get_San_format_model(wb, sheet, sheet.nrows, acc_name)
 
-    list_movements = []
-    for r in range(first_row,sheet.nrows):
-        list_movements.append(get_movement(r, xls_model))
-
-    return list_movements
+    return get_list_mov_by_model(xls_model)
 
 
 def get_Com_movements():
     file_name = 'Com.xls'
-    first_row = 5
-    col_date = 1
-    col_concept = 2
-    col_amount = 3
-    col_balance = 4
+    acc_name = file_name[:-4]
 
     wb = open_workbook(file_name)
     sheet = wb.sheet_by_index(0)
 
-    xls_model = excel_format.ExcelFormat(wb,sheet,col_date, col_concept,col_amount, col_balance)
+    xls_model = excel_format.get_Ing_format_model(wb, sheet, sheet.nrows, acc_name)
 
+    return get_list_mov_by_model(xls_model)
+
+
+def get_list_mov_by_model(model):
     list_movements = []
-    for r in range(first_row,sheet.nrows):
-        list_movements.append(get_movement(r, xls_model))
+    for r in range(model.first_row,model.rows):
+        list_movements.append(get_movement(r, model))
 
     return list_movements
 

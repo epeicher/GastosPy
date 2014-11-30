@@ -15,14 +15,14 @@ def initialize_db():
             concept TEXT,
             amount REAL,
             balance REAL,
-            category_id INTEGER,
-            account_id INTEGER
+            accountName TEXT,
+            category_id INTEGER
         );
         ''')
     c.execute('''
         CREATE UNIQUE INDEX IF NOT EXISTS
         IX_UNIQUE_TRANSACTION
-        ON movements(dateValue, concept, amount);''')
+        ON movements(dateValue, concept, amount, accountName);''')
 
     conn.commit()
     conn.close()
@@ -31,6 +31,10 @@ def initialize_db():
 def save_movements(m):
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.executemany('INSERT OR IGNORE INTO movements (dateValue, concept, amount, balance) VALUES (?,?,?,?)', m)
+    c.executemany('''INSERT OR IGNORE INTO movements (dateValue, concept, amount, balance, accountName)
+                    VALUES (?,?,?,?,?)''', m)
     conn.commit()
     conn.close()
+
+if __name__ == '__main__':
+    initialize_db()
